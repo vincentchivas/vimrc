@@ -1,0 +1,100 @@
+ ,v
+    if tmpl_name == 'rbdetail' or tmpl_name == 'wxdetail':,V
+o,v
+n,v
+i,v
+h,v
+p,v
+l,v
+        print ip,V
+        print request.META,V
+    print req_dict,V
+r,v
+u,v
+        # url = 'http://mp.weixin.qq.com/s?__biz=MjM5MjI3NDg2MA==&mid=402751616&idx=1&sn=266b568325185ce87d3d34a024e5e7c9&3rd=MzA3MDU4NTYzMw==&scene=6#rd',V
+#,v
+b,v
+    'rbdetail': 'wnpyq',,V
+    'redbag/rbdetail': 'wnpyq',,V
+            save_dict.update({''}),V
+,,v
+],v
+[,v
+_,v
+a,v
+d,v
+e,v
+m,v
+media_urls = ,v
+        media_urls = task.pop('media_url', []),V
+c,v
+t,v
+f,v
+,V
+APP_CONF = {'zfb':[]},V
+),v
+(,v
+fetch_appconf, ,v
+def fetch_appconf(appname='zfb'):    if appname == 'kzf':        return KZF_APPID, KZF_APPKEY    elif appname == 'wnpyq':        return WNPYQ_APPID, WNPYQ_APPKEY    else:        return WX_APPID, WX_APPSEC,V
+    redirect_uri = "%sredbag/rbdetail.html" % WNPYQ_DOMAIN,V
+    Admongo,V
+    task = Admongo.find_one(        'adtask', cond={'taskid': taskid}, fields={'_id': 0}),V
+",v
+},v
+{,v
+',v
+    tmpl_name = 'rbdetail',V
+    return json_response_ok(data=share_link),V
+    share_link = combine_taskurl(openid, ret_taskid, tmpl_name, need_auth),V
+        url = req_dict.get('url'),V
+article_type,v
+    # check the url in task list    check_task_by_url = Admongo.find_one(        'adtask',        {'task_url': url, 'type': article_type, 'need_auth': need_auth})    if check_task_by_url:        taskid = check_task_by_url.get('taskid')        share_link = combine_taskurl(openid, taskid, need_auth=need_auth)        return json_response_ok(data=share_link)    # the article from mp.weixin.qq.com,V
+            tmpl_name = 'zandetail' if article_type == 2 else 'detail',V
+    wx_domain = 'http://mp.weixin.qq.com/',V
+            url = req_dict.get('url'),V
+    if url.startswith(wx_domain):        # local_imgs im mp article , sync image to upyun        tmpl_name = 'zandetail' if article_type == 2 else 'detail'        local_imgs = []        share_dict = mp_article(url)        if share_dict:            local_imgs = share_dict.pop('local_imgs', [])            save_dict.update(share_dict)        else:            return json_response_error(PARAM_ERROR, msg='cant filter url')        query_dict = {            'share_icon': save_dict.get('share_icon'),            'title': save_dict.get('title'),            'need_auth': need_auth,            'type': article_type,            'detail': save_dict.get('detail')}        # notify to download icon, update url        (ret_taskid, is_new) = get_taskid(query_dict, save_dict)        # notify to download imgs in content, update url, content        # new article and cdn switch is on        if is_new and CDN_SWITCH:            sync_image_upyun(ret_taskid, local_imgs),V
+    if red_type == 1:,V
+        save_dict.update({'media_id': mid_list, 'type': 3}),V
+    else:,V
+        save_dict.update({"type": 4}),V
+'media_url': media_list,v
+    ,V
+tag = "unknown"    t = now_timestamp()    save_dict = {        'share_icon': share_icon,        'share_link': tag,        'title': title,        'detail': title,        'expired': False,        'deadline': t + _DEFAULT_DEADLINE,        'task_url': '',        'shared_times': 0,        'fee': 0,        'page_show': 0,        'suspend': False,        'task_type': 'redpack',        'need_auth': need_auth,        'task_owner': openid,        'creat_time': t,        'media_url': media_list,        'total': MAX_INT,        'amount': amount}        ,v
+share_icon,v
+    ###################,V
+    #######save dict############    tag = "unknown"    t = now_timestamp()    save_dict = {        'share_icon': share_icon,        'share_link': tag,        'title': title,        'detail': title,        'expired': False,        'deadline': t + _DEFAULT_DEADLINE,        'task_url': '',        'shared_times': 0,        'fee': 0,        'page_show': 0,        'suspend': False,        'task_type': 'redpack',        'need_auth': need_auth,        'task_owner': openid,        'creat_time': t,        'media_url': media_list,        'total': MAX_INT,        'amount': amount},V
+    share_icon = '',V
+    tag = "unknown"    t = now_timestamp()    save_dict = {        'share_icon': share_icon,        'share_link': tag,        'title': title,        'detail': title,        'expired': False,        'deadline': t + _DEFAULT_DEADLINE,        'task_url': '',        'shared_times': 0,        'fee': 0,        'page_show': 0,        'suspend': False,        'task_type': 'redpack',        'need_auth': need_auth,        'task_owner': openid,        'creat_time': t,        'media_url': media_list,        'total': MAX_INT,        'amount': amount}    if red_type == 1:,V
+    task_type = 'redpack',V
+y,v
+k,v
+s,v
+    if not code:        return json_response_error(PARAM_ERROR, msg='code request')    try:        appconf = fetch_appconf('wnpyq')        openid = fetch_openid(code, appconf)    except:        return json_response_error(PARAM_ERROR, msg='openid error'),V
+    need_auth = int(req_dict.get('need_auth', 1)),V
+    # openid = 'oWDB4t9zZz51K-3is5akq2lfv5QE',V
+    # 0 base_info 1 userinfo,V
+        return json_response_error(PARAM_ERROR, msg='the money is illegal'),V
+    if amount < 0:,V
+    amount = float("%0.2f" % amount),V
+    try:        amount = float(amount)    except Exception as e:        return json_response_error(PARAM_ERROR, msg='the money is illegal')    amount = float("%0.2f" % amount)    if amount < 0:        return json_response_error(PARAM_ERROR, msg='the money is illegal'),V
+    amount = req_dict.get("amount", 0),V
+    try:        red_type = int(red_type)    except Exception as e:        red_type = 1,V
+    if red_type ==5:,V
+    red_type = req_dict.get('type'),V
+    req_dict = request.form,V
+import urllib,V
+    PROXY_DETAIL_URL),V
+import simplejson,V
+        state_dumps = simplejson.dumps(state_dict)        state_str = urllib.quote_plus(state_dumps)        return PROXY_DETAIL_URL + '?state=%s' % state_str,V
+            save_usertoken(uid, ip, state_dict),V
+            ip = request.remote_addr,V
+{'$exists': True},v
+        else:,V
+            openid = check.get('openid'),V
+            if openid:,V
+                need_auth = 0 if _check_auth(openid) else 1,V
+            openid = check.get('openid')            if openid:                need_auth = 0 if _check_auth(openid) else 1,V
+            check = UserToken.find_one(                'adtask', {'uid': uid, 'openid': {'$exists': True}}),V
+        check = UserToken.find_one(            'adtask', {'uid': uid, 'openid': {'$exists': True}}),V
+        print check,V
+            else:,V
